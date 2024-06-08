@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BurberDinner.Application.Common.Interfaces.Authentication;
 using BurberDinner.Application.Common.Interfaces.Services;
+using BurberDinner.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,7 +18,7 @@ public class JwtTokenGenerator : IjwtTokenGenerator
         _dateTimeProvider = dateTimeProvider;
         _jwtsettings= jwtSOptions.Value;
     }
-    public string GenerateToken(Guid userId, string firstName, string lastName)
+    public string GenerateToken(User user)
     {   
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtsettings.Secret!)),
@@ -26,10 +27,10 @@ public class JwtTokenGenerator : IjwtTokenGenerator
         );
         var claims= new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.GivenName,firstName ),
-            new Claim(JwtRegisteredClaimNames.FamilyName,lastName ),
-            new Claim(JwtRegisteredClaimNames.Jti, userId.ToString())
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.GivenName,user.FirstName! ),
+            new Claim(JwtRegisteredClaimNames.FamilyName,user.LastName! ),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
         var securityToken = new JwtSecurityToken(
             issuer: _jwtsettings.Issuer,
@@ -42,4 +43,5 @@ public class JwtTokenGenerator : IjwtTokenGenerator
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
         
     }
+
 }

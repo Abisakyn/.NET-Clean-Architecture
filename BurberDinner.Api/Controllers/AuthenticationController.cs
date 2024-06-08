@@ -1,4 +1,5 @@
 using BuberDinner.Application.Services.Authentication;
+using BurberDinner.Application.Services.Authentication;
 using BurberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,10 +26,10 @@ namespace BurberDinner.Api.Controllers
                 request.Password);
 
             var response = new AuthenticationResponse(
-                authResult.Id,
-                authResult.FirstName,
-                authResult.LastName,
-                authResult.Email,
+                authResult.User.Id,
+                authResult.User.FirstName!,
+                authResult.User.LastName!,
+                authResult.User.Email!,
                 authResult.Token);
 
             return Ok(response);
@@ -42,10 +43,10 @@ namespace BurberDinner.Api.Controllers
                 request.Password);
 
             var response = new AuthenticationResponse(
-                authResult.Id,
-                authResult.FirstName,
-                authResult.LastName,
-                authResult.Email,
+                authResult.User.Id,
+                authResult.User.FirstName!,
+                authResult.User.LastName!,
+                authResult.User.Email!,
                 authResult.Token);
 
             return Ok(response);
